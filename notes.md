@@ -8,13 +8,23 @@
 ``` c++
     // 申请一个类型的内存
     int *a = new int;
-    // 检查申请是否成功
+    // 需要检查申请是否成功
     if(NULL == a){
     
     }
+    // 释放内存空间
     delete a;
     // 申请一块内存
     int *b = new int[10];
     delete []b ;
 ```
-- 
+- 初始化列表：当有常量数据成员时必须用初始化列表来初始化
+```c++
+class Student
+{
+    Student(int x, int y):a(x),b(y){};
+private:
+    int a;
+    int b;
+}
+```
