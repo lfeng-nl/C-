@@ -203,10 +203,34 @@
 ## 4.多态
 
 - 静态多态：（早绑定），编译时就能确定的；
+
 - 动态多态：（晚绑定），运行时确定的；以封装和继承为基础；virutal修饰需要形成多态的成员函数，构成虚函数；
+
 - virtual限制：
    - 不能修饰构造函数
+
   - 不能修饰静态成员函数
+
   - 不能修饰非成员函数
+
   - 不能修饰内联函数，virtual是动态行为，inline是静态行为；
 
+## 标准库
+### a.IO库
+
+- istream：类型，`typedef basic_istream<char> istream；`
+  - cin：一个istream对象，`extern istream cin;`；
+- ostream：类型，`typedef basic_ostream<char> ostream；`
+  - cout：一个ostream对象，`extern ostream cout;`；
+- 缓冲区刷新：
+  - 操纵符：endl：刷新换行、flush：刷新、ends：空字符和刷新；
+- 关联输入输出：tie，共有两个重载版本，
+  - `tie()`:返回关联的out put stream **指针**
+  - `tie(ostream* tiestr)`:关联到指定tiestr，并返回一个指向绑定的流的指针；
+- 每个流都有一个关联的文件模式（file mode），用来指出如何使用文件：
+  - in（以读方式打开）、out（以写方式打开）、app（每次写操作前均定位到文件末尾）、ate（打开文件后立即定位到文件末尾）、trunc（截断文件）、binary（以二进制方式进行IO）；
+
+### b.顺序容器
+### c.泛型算法
+### d.关联容器
+### e.动态内存
