@@ -44,11 +44,18 @@
     - UTF-16：任何字符对应的数字都用两个字节来保存；
     - 还需要在文本使用 `EF BB BF` 三个字节表示使用 UTF-8 编码;使用` FE FF `表示使用 UTF-16 编码。
 
-- 范围for：
+- 范围`for()`：
 
     ```c++
+    /* 
     for(declaration:expression)
       	statement
+    */
+    vector<int> v={0,1,2,3,4};
+    for(auto &a:v){					//对于v中的每个元素
+      cout << a << " ";
+    }
+    cout << endl;
     ```
 
 - 函数的**声明** 和 **定义**：声明无函数体，定义有函数体；函数声明也叫函数原型；
@@ -231,6 +238,69 @@
   - in（以读方式打开）、out（以写方式打开）、app（每次写操作前均定位到文件末尾）、ate（打开文件后立即定位到文件末尾）、trunc（截断文件）、binary（以二进制方式进行IO）；
 
 ### b.顺序容器
+
+一个容器就是一些特定类型对象的集合。顺序容器，提供了控制元素存储和访问顺序的能力；这种顺序依赖于元素加入容器时的位置；
+
+
+
 ### c.泛型算法
+
+- **lambda**表达式：
+
+  - 可调用对象：可以用**调用运算符"`( )`"**调用的对象；包括函数、函数指针、重载了函数调用运算符的类、lambda表达式；
+
+  - lambda 表达式形式：`[捕获列表](参数列表)->return type {function body;};`例如：
+
+    ```c++
+    /* 必须有捕获列表和函数体 */
+    int i = 3
+    auto f = [i](int x)->int{return x+i;};
+    cout << f(1) << endl;
+    // 显示：4
+    ```
+
+- `bind()`参数绑定；
+
+  ```c++
+  // a function: (also works with function object: std::divides<double> my_divide;)
+  double my_divide (double x, double y) {return x/y;}
+
+  struct MyPair {
+    double a,b;
+    double multiply() {return a*b;}
+  };
+
+  int main () {
+    using namespace std::placeholders;    // adds visibility of _1, _2, _3,...
+
+    // binding functions:
+    auto fn_five = std::bind (my_divide,10,2);               // returns 10/2
+    std::cout << fn_five() << '\n';                          // 5
+
+    auto fn_half = std::bind (my_divide,_1,2);               // returns x/2
+    std::cout << fn_half(10) << '\n';                        // 5
+
+    auto fn_invert = std::bind (my_divide,_2,_1);            // returns y/x
+    std::cout << fn_invert(10,2) << '\n';                    // 0.2
+
+    auto fn_rounding = std::bind<int> (my_divide,_1,_2);     // returns int(x/y)
+    std::cout << fn_rounding(10,3) << '\n';                  // 3
+
+    MyPair ten_two {10,2};
+
+    // binding members:
+    auto bound_member_fn = std::bind (&MyPair::multiply,_1); // returns x.multiply()
+    std::cout << bound_member_fn(ten_two) << '\n';           // 20
+
+    auto bound_member_data = std::bind (&MyPair::a,ten_two); // returns ten_two.a
+    std::cout << bound_member_data() << '\n';                // 10
+
+    return 0;
+  }
+  ```
+
+  ​
+
 ### d.关联容器
+
 ### e.动态内存
