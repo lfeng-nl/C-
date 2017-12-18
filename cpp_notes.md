@@ -33,6 +33,8 @@
   - 分配失败：new会抛出异常bac_alloc异常，也会返回NULL；malloc返回NULL；
   - 自定义类型：new会先调用`operator new`非配内存，再调用构造函数，初始化对象；delete先调用析构函数，再释放内存；malloc只负责申请一段内存区域；
 
+- 动态内存`delete`掉之后要将指针值赋为`NULL`，避免悬空指针的问题；
+
 - 初始化列表：当有常量数据成员时必须用初始化列表来初始化
 
   ```c++
@@ -487,5 +489,43 @@
 
 - map：称为关联数组，成员为`typedef pair<const Key, T>value_type;`；
 
-## 6 动态指针
+## 6 智能指针
+
+除了静态内存和栈内存，每个程序还拥有一个内存池，这部分内存被称为自由空间（free store)或堆（heap）；C++使用new、delete来为对象分配空间并返回一个指向该对象的指针。为了更容易的使用动态内存，新标准库提供了两种智能指针：`smart_ptr, unique_ptr`;
+
+- `smart_ptr`：也是一个模板，类似vector，需要提供额外信息；
+
+  - 使用智能指针，最标准的方法就是使用`make_shared<>()`的标准库函数分配动态内存；
+
+  - 如果使用new来为智能指针分配空间，必须使用直接初始化：
+
+    ```c++
+    shared_ptr<int> p1 = new int(2);	//错误；
+    shared_ptr<int> p2(new int(2));		//正确；
+    ```
+
+  - make_shared<T> (args)：返回一个shared_ptr，指向一个动态分配的类型T的对象，使用args初始化这个对象；
+
+    - shared_ptr的拷贝和赋值：当进行拷贝和赋值操作时，每个shared_ptr都会记录有多少个其他的`shared_ptr`指向相同的对象；每个`shared_ptr`都有一个关联的计数器，通常称为引用计数（reference count）。**也就是说，shared_ptr知道有多少个指针指向相同的对象，并能在恰当的时候自动释放**
+
+  - shared_ptr的资源销毁：在析构函数中，引用计数减1，当引用计数减为0时，释放这段内存；
+
+  - 不要混用智能指针和普通指针！！以免造成，内存提前销毁导致的错误；
+
+  - `shared_ptr.get()`：会返回一个普通指针，拿到的指针只能进行访问，不能销毁，否则引起程序运行错误；
+
+- `unique_ptr`：拥有它所指向的对象，与shared_ptr不同，某个时刻，只能有一个unique_ptr指向一个给定的对象；
+
+  - `unique_ptr `没有提供类似`make_shared`的标准库函数，当定义unique_ptr时，必须将其绑定到一个new返回的指针，必须采用直接初始化的形式：
+
+    ```C++
+    unique_ptr<int> ptr(new int(2));
+    ```
+
+  - unique_ptr拥有指向的对象，所以不能拷贝和赋值；
+
+- `weak_ptr`：是一种不控制所指向对象生存周期的智能指针，他指向由一个`shared_ptr `管理的对象，不改变`shared_ptr`的引用计数，
+
+  - 需要一个`shared_ptr`来来初始化；
+  - ​
 
