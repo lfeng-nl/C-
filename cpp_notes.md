@@ -579,7 +579,7 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
 
 ### b.顺序容器
 
-一个容器就是一些特定类型对象的集合。顺序容器，提供了控制元素存储和访问顺序的能力；这种顺序依赖于元素加入容器时的位置；
+一个容器就是一些特定类型对象的集合。顺序容器，提供了控制元素存储和访问顺序的能力；这种顺序依赖于元素加入容器时的位置；有`vector,deque,list,forward_list,array, string`
 
 ### c.泛型算法
 
@@ -650,9 +650,53 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
 
 ### d.关联容器
 
-主要就是各种类型的`map`、`set`
+关联容器中的元素按关键字来保存和访问，主要是`map`、`set` ；还有`multimap,multiset` ,无序关联容器：`unordered_map, unordered_set,unordered_multimap, unordered_multiset`
 
 - map：称为关联数组，成员为`typedef pair<const Key, T>value_type;`；
+
+### e.`tuple`元组类型
+
+用于保存元素集合，元素类型可以不同；可以把`tuple`看作是一个“快速而随意”的数据结构；任意打包组合一段数据，比如从函数中返回一段数据。
+
+- tuple也是模板类，需要指明参数类型；
+
+  ```c++
+  std::tuple<int, char> foo(10, 'a');						//直接构造一个元组
+  auto bar = std::make_tuple("test", 3.1, 13, 'y');		//使用make_tuple构造一个元组
+  ```
+
+
+- 访问成员
+
+  ```c++
+  auto t = get<0>(foo);				//返回foo元组的第一个成员引用
+  ```
+
+### f.`bitset`类型
+
+存储0和1的序列，优化了存储，每位只占用一个`bit`；
+
+- 类模板，必须指明含有多少位；
+
+  ```c++
+  std::bitset<16> foo;
+  std::bitset<16> bar(0xfa2);				//使用unsigned初始化
+  std::bitset<16> bar("10001");			//使用string初始化
+  ```
+
+- 关键操作
+
+  ```c++
+  b.any();								//b 中是否有置位
+  b.all();								//b 中是否都置位
+  b.test(pos);							//b pos位是否置位
+  b.set(pos, v);							//将pos位置位v
+  b.flip();								//翻转
+  b.flipi(pos);							//某一位翻转
+  b.to_string();							//转化为string
+  os << b;								//
+  is >> b;								//
+  ```
 
 ## 6 动态内存
 
@@ -743,7 +787,6 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
   operator+(data1, data2);			//等价的函数调用
   ```
 
-  ​
 
 
 - 双目运算符重载
@@ -755,13 +798,40 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
   }
   ```
 
+- 不能被重载的运算符：域运算符`::`, 成员访问运算符`.`,条件运算符`? :`, 成员指针访问运算符`.*`
+
+- 运算符重载后的优先级和结合性：按照原有优先级和结合性； 
+
+- 编译程序如何选用运算符函数：运算符重载实际是一个函数，所以运算符的重载实际上是函数的重载。编译程序对运算符重载的选择，遵循着函数重载的选择原则。当遇到不很明显的运算时，编译程序将去寻找参数相匹配的运算符函数；
+
 ## 8.模板
 
 面向对象编程和泛型编程都能处理在编写程序时不知道类型的情况；
 
-### a.函数模板
+### a.函数模板,function template
+
+```c++
+template <typename T>
+int compare(const T &v1, const T &v2)
+{
+  if(v1 < v2) return -1;
+  if(v2 < v1) return 1;
+  return 0;
+}
+```
+
+- `template` ：模板都是以关键字template开始，后跟一个模板参数列表，
 
 
+- 模板实例化：可以由编译器推断模板参数类型来实例化，也可以主动示例化（例如赋值给一个函数指针）；
+- 模板编译：编译器遇到模板时，不生成代码，只有实例化出一个模板的一个特定版本时，编译器才会生成代码。
+
+### b.类模板，class template
+
+- 类模板和模板类：类模板关键点是模板，用于生成类的模板；模板类关键点是类，是由类模板生成的类；
+- 与函数模板不同，类模板不能通过编译器推断模板参数类型，必须提供额外信息。
+- 对于一个示例化了的类模板，其成员只有在使用时才被实例化。
+- ​
 
 ## 未分配问题
 
