@@ -581,6 +581,48 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
 
 一个容器就是一些特定类型对象的集合。顺序容器，提供了控制元素存储和访问顺序的能力；这种顺序依赖于元素加入容器时的位置；有`vector,deque,list,forward_list,array, string`
 
+- 特点：
+
+  | 容器           |                特点                 |
+  | ------------ | :-------------------------------: |
+  | vector       | 可变大小数组，支持快速随机访问，在尾部之外的位置插入或删除元素很慢 |
+  | deque        |    双端队列，支持快速随机访问，在头尾插入、删除速度很快     |
+  | list         |           双向链表，支持双向顺序访问           |
+  | forward_list |          单向链表，只支持单向顺序访问           |
+  | array        |    固定大小数组，除类型还要指定大小，不能添加或删除元素     |
+  | string       |        与vector相似，但专门用于保存字符        |
+
+- 容器的构造、迭代器都需要指定元素类型：`vector<int> v;` 、 ` vector<int>::iterator i = v.begin();`
+
+- 构造：1.`vector<int> v(n, e);`  2.`vector<int> v{1,2,3};`  3.`vector<int> v = {1,2,3};`  4.`vector<int> v(v2.begin(), v2.end());`  5.`vector<int> v(v2);`
+
+- 向一个`vector, string, deque`插入元素会使所有指向容器的迭代器、引用和指针失效；
+
+- 常用操作：
+
+  ```c++
+  c.push_back();					// 尾部插入
+  c.insert();						// 插入，有多种重载方式，单个，范围等
+  c.erase();						// 删除指定迭代器或迭代器范围
+  c.clear();						// 删除所有元素
+  ```
+
+- vector的实现：内部，像数组一样，紧密排列；会事先申请多一部分内存，当容量不够使，再申请更大的内存空间，然后数据迁移，然后释放之前的内存空间；
+
+  - capacity：在不分配新的内存空间的前提下，最多可以保存的元素；
+  - size：已经保存的元素数目；
+
+- 容器适配器：adaptor，适配器是一种机制，使某种事物的行为看起来像另外一种事物一样；默认情况下，stack和queue是基于==deque==实现的，也可以创建适配器时指定一个顺序容器类型；可以理解为：适配器为容器的二次封装，使容器表现出一定的特性；
+
+  - 栈适配器：提供`pop(), push(), emplace(), top()`等操作；（emplace() 构造一个元素，放入顶部）
+
+    ```c++
+    stack<int> stk(v);							// 	用对象 v 创建一个stack
+    stack<int, vector<int>> vec_str;			// 创建一个基于vector<int> 类型的 stack对象
+    ```
+
+  - 队列适配器：
+
 ### c.泛型算法
 
 - **lambda**表达式：
@@ -637,8 +679,11 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
   }
   ```
 
-- 迭代器：插入迭代器、流迭代器、反向迭代器、移动迭代器；
+### d.迭代器
 
+迭代器的使用类似于指针，可以用于遍历数据结构，由于不同的容器其底层实现不能，所以，迭代器的具体实现不同。
+
+- 迭代器：插入迭代器、流迭代器、反向迭代器、移动迭代器；
   - 插入迭代器：用来向给定容器指定位置插入一个元素；
     - back_inserter：尾部插入；只有赋值插入操作，`*i, i++, ++i`只会返回`i`;
     - front_inserter：同上，只有在容器支持`push_front()`操作，才可以使用；
@@ -647,14 +692,18 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
     - istream_iterator:
     - ostream_itreator:
   - 反向迭代器：在容器中从尾元素向首元素反向移动的迭代器。递增一个反向迭代器（++it）会移动到前一个元素；递减（--it）会向后移动一个元素；
+- 迭代器的失效：
+  - vector：的迭代器实现实际上就相当于一个指针，1.所有引起实际存储地址发生变化的操作都可能导致迭代器失效；例如：插入、尾部插入等；2.所有引起顺序变化的操作都可能导致迭代器失效，如，erase、插入、
+  - deque：删除出首尾位置之外的任何元素都会使 ==所有== 迭代器、引用和指针失效。
+  - list和forward_list：删除元素时，被删除的元素失效，其他依然有效；
 
-### d.关联容器
+### e.关联容器
 
 关联容器中的元素按关键字来保存和访问，主要是`map`、`set` ；还有`multimap,multiset` ,无序关联容器：`unordered_map, unordered_set,unordered_multimap, unordered_multiset`
 
 - map：称为关联数组，成员为`typedef pair<const Key, T>value_type;`；
 
-### e.`tuple`元组类型
+### f.`tuple`元组类型
 
 用于保存元素集合，元素类型可以不同；可以把`tuple`看作是一个“快速而随意”的数据结构；任意打包组合一段数据，比如从函数中返回一段数据。
 
@@ -672,7 +721,7 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
   auto t = get<0>(foo);				//返回foo元组的第一个成员引用
   ```
 
-### f.`bitset`类型
+### g.`bitset`类型
 
 存储0和1的序列，优化了存储，每位只占用一个`bit`；
 
