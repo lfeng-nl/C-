@@ -125,7 +125,7 @@
 
 - 函数指针：指向的是函数而非对象，函数指针同样需要确定对象，函数返回类型，参数类型和个数；
 
-- 内联函数：用inline关键字修饰，编译时将函数体嵌入到每一个调用处；而非调用时的函数转移；可以消除函数调用的时间；inline只是向编译器建议内联，具体实施与否需要看编译器。
+- 内联函数：用`inline`关键字修饰，编译时将函数体嵌入到每一个调用处；而非调用时的函数转移；可以消除函数调用的时间；inline只是向编译器建议内联，具体实施与否需要看编译器。
 
 - 重构：(refactoring)，重新设计类的体系，以便将操作和数据从一个类移动到另一个类中。
 
@@ -558,7 +558,7 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
 
   - 回避虚函数的机制：有些时候对虚函数的调用不要进行动态绑定，而是强制其执行虚函数的某个特定版本，可以使用作用域运算符来回避虚函数机制；
 
-   ​
+  - 绝对不要在构造和析构过程中调用virutal函数，表现不出虚函数的性质。
 
 -------
 
@@ -614,14 +614,21 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
 
 - 容器适配器：adaptor，适配器是一种机制，使某种事物的行为看起来像另外一种事物一样；默认情况下，stack和queue是基于==deque==实现的，也可以创建适配器时指定一个顺序容器类型；可以理解为：适配器为容器的二次封装，使容器表现出一定的特性；
 
-  - 栈适配器：提供`pop(), push(), emplace(), top()`等操作；（emplace() 构造一个元素，放入顶部）
+  - 栈适配器`stack`：提供`pop()清除顶部元素, push()压入, emplace()在顶部放置一个元素, top()返回顶部元素`等操作；（emplace() 构造一个元素，放入顶部）
 
     ```c++
+    stack<int> stk;								// 空的基于deque的栈
     stack<int> stk(v);							// 	用对象 v 创建一个stack
     stack<int, vector<int>> vec_str;			// 创建一个基于vector<int> 类型的 stack对象
     ```
 
-  - 队列适配器：
+  - 队列适配器`queue`：提供`q.pop()清除最前元素, q.front()返回最前的元素引用, q.back()返回最后元素引用，q.emplace()构造插入, q.push()插入`等操作；
+
+    ```c++
+    stack<int> q;								// 空的queue
+    stack<int> q(dq);							// 用deque类型的dq创建一个queue
+    stack<int, std::list<int> > q;				// 基于list的queue
+    ```
 
 ### c.泛型算法
 
@@ -699,9 +706,25 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
 
 ### e.关联容器
 
-关联容器中的元素按关键字来保存和访问，主要是`map`、`set` ；还有`multimap,multiset` ,无序关联容器：`unordered_map, unordered_set,unordered_multimap, unordered_multiset`
+关联容器中的元素按关键字来保存和访问，主要是`map`、`set` ；还有关键字可重复的：`multimap,multiset` ,无序关联容器：`unordered_map, unordered_set,unordered_multimap, unordered_multiset`
 
-- map：称为关联数组，成员为`typedef pair<const Key, T>value_type;`；
+- map：关键字---值  对的集合，也称为关联数组；成员为`typedef pair<const Key, T>value_type;`；
+
+- map关键字不可重复，并且在存入时进行排序；==所以，做为关键字类型，必须定义了‘正常行为’的`<`运算符== ；
+
+- 关键字为`const` ，不能被改变；
+
+- 插入元素可以用：`emplace()，insert()`;
+
+- pair类型：保存两个数据类型，类似容器；
+
+  ```c++
+  pair<int, string> p(1, "hello world");
+  p.first									// 返回第一个元素的引用
+  p.second								// 返回第二个元素的引用
+  ```
+
+- set：只有关键字的集合
 
 ### f.`tuple`元组类型
 
@@ -745,6 +768,24 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
   b.to_string();							//转化为string
   os << b;								//
   is >> b;								//
+  ```
+
+### h.正则表达式
+
+### i.随机数
+
+- 随机数引擎类：生成随机的unsigned整数序列；
+
+- 随机数分布类：使用引擎返回服从特定概率分布的随机数；
+
+- `default_random_engine`：随机数引擎，用于生成==原始随机数==；
+
+- `unifrom_int_distribution`：分布，可以构造一个分布对象，指定分布参数；
+
+  ```c++
+  unifrom_int_distribution<unsigned> u(0, 9);			// 构造分布器对象，设置参数
+  default_random_engine e;							// 构造引擎
+  u(e);												// 生成随机数
   ```
 
 ## 6 动态内存
@@ -882,6 +923,16 @@ int compare(const T &v1, const T &v2)
 - 对于一个示例化了的类模板，其成员只有在使用时才被实例化。
 - ​
 
+## 9.其他
+
+### a.异常
+
+- 析构函数绝对不要吐出异常（导致离开析构函数）；
+
+  ​
+
+### b.命名空间
+
 ## 未分配问题
 
 - RVO：return value optimization，返回值优化；是一种编译器优化技术；可以少做一次拷贝构造；
@@ -912,4 +963,11 @@ int compare(const T &v1, const T &v2)
 - REST架构；
 
 - SOA架构：
+
+- C++是个次语言：
+
+  - C：区块、语句、预处理、内置数据类型、数组、指针等
+  - Object-Oriented C++：C with Classes，构造析构、封装、继承、多态、virtual函数（动态绑定）等；
+  - Template C++：C++泛型部分，
+  - STL：容器，迭代器，算法，函数对象（一个重载了括号操作符“（）”的对象，其表现形式如同普通函数调用一般，因此取名叫函数对象）
 
