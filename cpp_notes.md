@@ -473,9 +473,15 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
   - 构造顺序：调用基类构造函数-->执行派生类初始化列表-->执行派生类初始化函数体；
   - 析构顺序：对派生类新增成员清理-->子对象的析构函数-->基类析构函数
 
-- 多继承：一个子类继承多个父类，例如`class C:public A,public B`，每个继承的类前都要加继承方式；
+- 直接基类和间接基类：
 
-- 多重继承：`class B:public A`,`class C:public B`；
+  ```c++
+  class Base{};
+  class A:public Base {};				// Base为A的直接基类
+  class B:public A {};				// A为B的直接基类，Base为B的间接基类
+  ```
+
+- 多重继承：指从多个==直接基类==中产生派生类的能力；`class C:public A, public B`；
 
 - 二义性：多个基类可能出现同名的成员，在派生类中对这种同名成员的访问是不确定的。必须加限定符`ClassName::`来限定是那个基类的；
 
@@ -565,6 +571,8 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
   - 回避虚函数的机制：有些时候对虚函数的调用不要进行动态绑定，而是强制其执行虚函数的某个特定版本，可以使用作用域运算符来回避虚函数机制；
 
   - 绝对不要在构造和析构过程中调用virutal函数，表现不出虚函数的性质。
+
+  - 虚函数的基类版本和派生类版本必须具有相同的形参类型；（导致一些限制）
 
 -------
 
@@ -986,6 +994,13 @@ class 类模板名{
   - 捕获异常：catch块；把异常处理程序放到catch中；
 - 析构函数绝对不要吐出异常（导致离开析构函数）；
 
+### c.运行时类型识别 RTTI
+
+运行时类型识别：run-time type identification RTTI；功能由两个运算符实现：
+
+- typeid运算符，用于返回表达式的类型；
+- dynamic_cast 运算符：用于将==基类型==的指针或引用安全地==转换成派生类==指针或引用；
+
 ## 未分配问题
 
 - RVO：return value optimization，返回值优化；是一种编译器优化技术；可以少做一次拷贝构造；
@@ -1001,7 +1016,7 @@ class 类模板名{
   {
       return BigObject(); 			// RVO
   }
-
+   
   BigObject bar()
   {
      BigObject localObj;
