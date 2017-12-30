@@ -146,6 +146,15 @@
 
 - C++ 应该尽量使用`nullptr`，避免用`NULL`
 
+- 顶层const和底层const:顶层const表示指针本身是一个常量;底层const表示指针所指向的对象是一个const;
+
+### 显示类型转换
+
+- 命名的强制类型转换:`cast-name<type>(expression)`,`type`为要转换的目标类型,`expression`,为要转换的值,`cast-name`为一下几种:
+  - `static_cast`:任何具有明确定义的类型转换,只要不包含底层const,都可以用static_cast;
+  - `const_cast`:只能改变运算对象的底层const;去掉const属性;
+  - `reinterpret_cast`:为运算对象的位模式提供较低层次上的重新解释;
+
 ---
 ## 2.类相关
 
