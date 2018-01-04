@@ -43,3 +43,13 @@
   ```
 
 - restrict：限定符，用于告诉编译器，指针是访问一个数据对象唯一且初始化的方式，对象已经被指针所引用，不能通过该指针外所有其他直接或间接的方式修改该对象的内容。
+
+- 关于typedef：
+
+  ```c
+  typedef unsigned char BYTE;						 // 随后就可以用BYTE来定义变量了
+  typedef struct {double x; double y；} rect;		// 随后就可以用rect 定义相关结构体
+  typedef char (*FRPTC(void)) [5];				 // 可以用 FRPTC 来声明一个函数指针，该函数返回一个指向五个char类型元素数组的指针
+  ```
+
+  ​
