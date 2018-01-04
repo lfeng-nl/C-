@@ -149,6 +149,8 @@
 
 - 顶层const和底层const：顶层const表示指针本身是一个常量;底层const表示指针所指向的对象是一个const;
 
+- `::`运算符：运算等级最高，分为三种：==全局作用域符==，类作用域符号，命名空间作用域符号。`::name` ，调用全局name；
+
 ### b.显式类型转换
 
 - 命名的强制类型转换:`cast-name<type>(expression)`,`type`为要转换的目标类型,`expression`,为要转换的值,`cast-name`为以下几种:
