@@ -151,6 +151,8 @@
 
 - `::`运算符：运算等级最高，分为三种：==全局作用域符==，类作用域符号，命名空间作用域符号。`::name` ，调用全局name；
 
+- `struct `和`class` 的区别：类成员默认是private的，struct成员默认为public的；
+
 ### b.显式类型转换
 
 - 命名的强制类型转换:`cast-name<type>(expression)`,`type`为要转换的目标类型,`expression`,为要转换的值,`cast-name`为以下几种:
