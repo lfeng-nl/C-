@@ -151,14 +151,27 @@
 
 - `::`运算符：运算等级最高，分为三种：==全局作用域符==，类作用域符号，命名空间作用域符号。`::name` ，调用全局name；
 
-- `struct `和`class` 的区别：类成员默认是private的，struct成员默认为public的；
+- `struct `和`class` 的区别：类成员默认是private的，struct成员默认为public的，结构体的成员向来都是直接访问的；
 
 ### b.显式类型转换
 
 - 命名的强制类型转换:`cast-name<type>(expression)`,`type`为要转换的目标类型,`expression`,为要转换的值,`cast-name`为以下几种:
   - `static_cast`:任何具有明确定义的类型转换,只要不包含底层const,都可以用static_cast;
+
   - `const_cast`:只能改变运算对象的底层const;去掉const属性;
+
+    ```c++
+    const int i = 10;
+    const int *p = &i;
+    int *q = const_cast<int *>(p);  // 
+    ```
+
   - `reinterpret_cast`:为运算对象的位模式提供较低层次上的重新解释;
+
+    ```c++
+    int *p;
+    char *c = reinterpret_cast<char *>(p);
+    ```
 
 ---
 ## 2.类相关
