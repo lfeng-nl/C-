@@ -149,6 +149,13 @@
 
 - 顶层const和底层const：顶层const表示指针本身是一个常量;底层const表示指针所指向的对象是一个const;
 
+    ```c
+    const int * a; 			// 底层const，
+    int const *a;			// 底层const，
+    int *const a;			// 顶层const，
+    // 注意：c++
+    ```
+
 - `::`运算符：运算等级最高，分为三种：==全局作用域符==，类作用域符号，命名空间作用域符号。`::name` ，调用全局name；
 
 - `struct `和`class` 的区别：类成员默认是private的，struct成员默认为public的，结构体的成员向来都是直接访问的；
@@ -215,7 +222,7 @@
 
 - 常数据成员：只能通过初始化列表初始化;
 
-- 常成员函数：函数后用const修饰，实际修饰的是this指针，this指向的东西是常量，里面的内容不变；
+- 常成员函数：函数后用const修饰，实际修饰的是`this`指针，`this`指向的东西是常量，里面的内容不变；
     ```c++
     void test() const
     {
@@ -1101,5 +1108,8 @@ class 类模板名{
   - Template C++：C++泛型部分，
   - STL：容器，迭代器，算法，函数对象（一个重载了括号操作符“（）”的对象，其表现形式如同普通函数调用一般，因此取名叫函数对象）
 
-- 链接指示：`extern “C”`
+- 关于`new`：new代表三种含义，`new operator`  `operator new` `placement new`;
+
+  - `new operator` :
+
 
