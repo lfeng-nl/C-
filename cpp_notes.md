@@ -1112,7 +1112,13 @@ class 类模板名{
 - 关于`new`：new代表三种含义，`new operator`  `operator new` `placement new`;
 
   - `new operator` :就是平时所使用的new，其行为就是分配内存、构造、返回指针；
-  - `operator new` ：上面所说的分配内存就是通过调用`operator new` 完成的；可以重载；
-  - `placement new` ：是用来实现定位构造的，上面所说的第二步，在申请的内存上构造对象；`A *p; new(p)A(3) //-->p->A::A(3)`,在指定的地址上用指定类型的构造函数来构造一个对象；
 
+  - `operator new` ：上面所说的分配内存就是通过调用`operator new` 完成的；可以重载；
+
+  - `placement new` ：是用来实现定位构造的，上面所说的第二步，在申请的内存上构造对象；
+
+    ```c
+    A *p;			  // 已经申请好内存
+    new(p) A(3);      //-->p->A::A(3),在指定的地址上用指定类型的构造函数来构造一个对象；
+    ```
 
