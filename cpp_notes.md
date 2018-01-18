@@ -882,6 +882,8 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
 
 智能指针是为了解决动态申请的内存忘记释放而造成的内存泄露问题；
 
+> ​	auto_ptr：拥有指针所有权，不允许共享；拷贝或赋值将导致右侧对象置为`NULL`，不推荐使用；
+
 - `smart_ptr`：也是一个模板，类似vector，需要提供额外信息；
 
   - 使用智能指针，最标准的方法就是使用`make_shared<>()`的标准库函数分配动态内存，并返回一个智能指针；
@@ -904,7 +906,7 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
 
   - `shared_ptr.get()`：会返回一个普通指针，拿到的指针只能进行访问，不能销毁，否则引起程序运行错误；
 
-- `unique_ptr`：拥有它所指向的对象，与shared_ptr不同，某个时刻，只能有一个unique_ptr指向一个给定的对象；
+- `unique_ptr`：拥有它所指向的对象，与`shared_ptr`不同，某个时刻，只能有一个unique_ptr指向一个给定的对象；
 
   - `unique_ptr `没有提供类似`make_shared`的标准库函数，当定义unique_ptr时，必须将其绑定到一个new返回的指针，必须采用直接初始化的形式：
 
@@ -914,11 +916,13 @@ ClassName& operator=(ClassName rhs)	// 传递值，用到了拷贝构造函数
 
   - `unique_ptr`拥有指向的对象，所以不能拷贝和赋值；
 
+  - 用以替代`auto_ptr`,
+
 - `weak_ptr`：是一种不控制所指向对象生存周期的智能指针，他指向由一个`shared_ptr `管理的对象，不改变`shared_ptr`的引用计数，
 
   - 需要一个`shared_ptr`来来初始化；
     - 最后一个`shared_ptr` 被销毁，对象就会被销毁，即使有`weak_ptr`指向对象；
-  - 由于`weak_ptr`所指向的对象可能不存在，所以在使用前，需要调用`lock`；如果未销毁，会返回一个指向共享对象的`shared_ptr`；
+  - 由于`weak_ptr`所指向的对象可能不存在，所以==在使用前，需要调用`lock`==；如果未销毁，会返回一个指向共享对象的`shared_ptr`；
 
 
 ### b.动态数组
