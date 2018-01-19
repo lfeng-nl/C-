@@ -18,7 +18,7 @@
 - 迭代器是一种smart pointer，
 - 偏特化：
   - 模板特例化：模板特化的目的就是==对于某一种变量类型具有不同的实现==；
-  - 偏特化Partial Specialization：
+  - 偏特化Partial Specialization：提供另一份template定义式，而其本身仍是template
 
 ## 序列式容器
 
